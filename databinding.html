@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<head>
+  <title>D3ata Binding</title>
+
+      <!-- This part of the talk covers data binding, an important and 
+            powerful feature of D3 and many other frameworks. -->
+  
+      <!-- First, be sure you include the d3 library (like, here) -->
+      <script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>
+
+</head>
+<body>
+
+    <!-- Notice we're starting with a completely blank website. We have 0
+          HTML elements in our page.-->
+  
+    <!-- The magic will happen here.-->
+    <script type="text/javascript">
+    
+      /* Here we set a variable called myBody in which we use d3 to select
+      the body of our HTML element (so the whole page) and we store it in
+      that variable. This way, anytime we wanted to change something to our body,
+      we could simply use d3 methods on the variable myBody. */
+      var myBody = d3.select("body")
+        /* Here we selectAll p, which seems weird because we don't have any p tags
+        (or paragraph tags) in our HTML body. If we don't have this line, some of our
+        later data binding won't work right, it will skip the first piece of data. 
+        (It'll make sense as you move on). */
+        .selectAll("p")
+        /* THIS IS MAGIC. We're going to bind a set of data to our body. This data can
+        be anything, and you can have as many pieces of data as you please. For this
+        example, I chose to just say hi to 4 of our HacKSU members, so my data will
+        just be 4 of our names. */
+        .data(["Robin", "Paul", "Matt", "Nic"])
+        /* Now we enter our data set. This is kind of like starting a for/foreach loop 
+        that will execute the next few methods for each piece of data we binded. */
+        .enter()
+        /* Now we append, or create a p tag or paragraph text. Again, this will happen 
+        4 times, as we have 4 names in our data set. */
+        .append("p")
+        /* Now we'll set the text element of each paragraph to be Hey there... name. Name
+        will be the repective name in the data set. The way this works is once you bind
+        the data and then enter(), this will know where we are in our data. More specifically,
+        the first time this happens, d3 knows that d (which stands for data) will be set to 
+        "Robin". The next time, it will know that d will be equal to "Paul". Each time 
+        these methods are looped through, d will change to the next piece of data. Similar
+        to d, D3 also provides you with i, which returns the index of the piece of data 
+        you're currently working on. So, if we were to add "+ i" after ""Hey there, " + d + "!""
+        the index of data would be returned. So, when Robin was being returned, i would
+        be 0, when we move on to Paul, i would be incremented to 1, and so on. */
+        .text(function(d){
+          return "Hey there, " + d + "!";
+        });
+
+      /* This is extremely powerful. You can bind all kinds of data and then customize
+      animations and graphics to visually represent your data, which is kind of the 
+      whole point of d3. */
+
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- This talk is based on this tutorial on D3:
+       http://christopheviau.com/d3_tutorial/ -->
+  <!-- There are a ton of other useful tutorials here:
+       https://github.com/mbostock/d3/wiki/Tutorials -->
+  
+  <!-- D3 library, needs to be in head! -->
+    <script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>
+</head>
+<body>
+    
+    <!-- our SVG and all our stuff will appear dynamically in here -->
+    <div id="viz"></div>  
+  
+  
+    <!-- js 4 life-->
+    <script type="text/javascript">
+
+    /*Below, we create a variable called sampleSVG and then using d3's
+    select functionality, we select the html item on our page with the 
+    id of viz and put that item  into our variable. Now we can reference
+    and make changes to our SVG as sampleSVG instead of always d3.select("#viz").
+    What these 4 lines actually do is they take the div with the id of #viz and
+    adding an SVG element to the div named "svg". (Note: We know this adds an 
+    SVG element and not another kind of HTML element because d3 knows that "svg"
+    implies that we're using the svg namespace, so it really appends "svg:svg"). 
+    After append, we make the width and height of the SVG (not the DIV) 
+    to be 200 px each.*/
+
+    var sampleSVG = d3.select("#viz")
+        .append("svg")
+        .attr("width", 200)
+        .attr("height", 200);  
+
+        /*You may ask why we don't need semicolons after all of these lines of code.
+        This is called method chaining, so we can do multiple method calls
+        (.append() and .attr() are all d3 methods, or functions) in one statement.
+
+        So, those statements above create an SVG with a code of:
+          <svg width="100" height="100">
+          <circle style="stroke: #808080; fill: #F0F8FF; " r="40" cx="50" cy="50"></circle>
+          </svg>
+
+        So now you may ask what's the point of doing  all these changes and
+        generating this svg in JS instead of something like Illustrator?
+        Here's why:
+          - You can add, remove and modify multiple elements from an existing DOM
+          - Dynamically add attributes and styles according to a function
+          - Animate attributes and styles
+          - Bind data to automatically add elements when needed
+          - Benefits from a lot of helper functions
+
+    Now we're going to create a circle inside of the SVG and style it to 
+    have a grey outline, a radius of 40 px, and have a center point of (50,50).
+    We're also going to make it so that when you mouseover the circle, the 
+    color changes. On the next line, we set the opposite function, mouseout
+    to fade the circle back to white as the mouse exits the circle. Then, on the 
+    final line of this block, we set a function for a mousedown event, so we tell
+    the browser to run the function called animateFirstStep (below) when we click
+    on the circle.*/
+
+    sampleSVG.append("circle")
+        .style("stroke", "gray")
+        .style("fill", "white")
+        .attr("r", 40)
+        .attr("cx", 50)
+        .attr("cy", 50)
+        .on("mouseover", function(){d3.select(this).style("fill", "aliceblue");})
+        .on("mouseout", function(){d3.select(this).style("fill", "white");})
+        .on("mousedown", animateFirstStep);
+
+
+    /* The function below is run when a mousedown event (or click) happens on the
+    circle svg. Basically, what is does is selects this, which is the object that
+    that method is being called on. In this case, we called the function because of
+    a click on the circle svg, so this will be the circle svg. ".transition" tells 
+    the browser that the following code with be a d3 animation. We set the animation 
+    delay to be 0, so it won't wait after clicking on the circle before it starts the
+    animation. We then set the duration to 1000 ms. We set the attribute to be animated
+    to be the radius, and that we want it animated to 10px. Then at the end, we
+    call the function animateSecondStep (below). */
+    function animateFirstStep(){
+        d3.select(this)
+          .transition()            
+            .delay(0)            
+            .duration(1000)
+            .attr("r", 10)
+            .each("end", animateSecondStep);
+    };
+
+    /* This function is pretty much the same as the last, it just animates this, or
+    the svg circle, back into its orginal state. It works by selecting this, (the circle)
+    and then transitioning the radius back to 40 px over the course of 1000ms. We don't
+    need to call another function at the end of this, as our circle is now reset to the 
+    original. */
+    function animateSecondStep(){
+        d3.select(this)
+          .transition()
+            .duration(1000)
+            .attr("r", 40);
+    };
+    
+    </script>
+</body>
+</html>
